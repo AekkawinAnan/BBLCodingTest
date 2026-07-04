@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFavorites } from '../context/FavoritesContext';
 import { Product } from '../types/Product';
 
 interface ProductDetailScreenProps {
@@ -16,6 +17,8 @@ interface ProductDetailScreenProps {
 }
 
 function ProductDetailScreen({ product, onBack }: ProductDetailScreenProps) {
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const favorited = isFavorite(product.id);
   const renderStars = (rate: number) => {
     const fullStars = Math.round(rate);
     return '★'.repeat(fullStars) + '☆'.repeat(5 - fullStars);
@@ -55,6 +58,16 @@ function ProductDetailScreen({ product, onBack }: ProductDetailScreenProps) {
               {product.rating.rate.toFixed(1)} ({product.rating.count} reviews)
             </Text>
           </View>
+
+          <TouchableOpacity
+            style={[styles.favoriteButton, favorited && styles.favoriteButtonActive]}
+            onPress={() => toggleFavorite(product)}
+            activeOpacity={0.7}>
+            <Text style={styles.favoriteIcon}>{favorited ? '♥' : '♡'}</Text>
+            <Text style={[styles.favoriteLabel, favorited && styles.favoriteLabelActive]}>
+              {favorited ? 'Remove from Favorites' : 'Add to Favorites'}
+            </Text>
+          </TouchableOpacity>
 
           <View style={styles.divider} />
 
@@ -155,6 +168,35 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#e2e8f0',
     marginVertical: 20,
+  },
+  favoriteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#4f46e5',
+    backgroundColor: '#ffffff',
+  },
+  favoriteButtonActive: {
+    backgroundColor: '#eef2ff',
+    borderColor: '#4f46e5',
+  },
+  favoriteIcon: {
+    fontSize: 22,
+    color: '#4f46e5',
+    marginRight: 8,
+  },
+  favoriteLabel: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#4f46e5',
+  },
+  favoriteLabelActive: {
+    color: '#4f46e5',
   },
   descriptionLabel: {
     fontSize: 16,

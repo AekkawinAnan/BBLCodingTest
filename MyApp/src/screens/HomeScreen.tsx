@@ -14,9 +14,10 @@ import { Product } from '../types/Product';
 
 interface HomeScreenProps {
   onProductSelect: (product: Product) => void;
+  onGoToFavorites: () => void;
 }
 
-function HomeScreen({ onProductSelect }: HomeScreenProps) {  
+function HomeScreen({ onProductSelect, onGoToFavorites }: HomeScreenProps) {  
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -106,6 +107,13 @@ function HomeScreen({ onProductSelect }: HomeScreenProps) {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <View style={styles.headerSpacer} />
+        <Text style={styles.headerTitle}>Products</Text>
+        <TouchableOpacity style={styles.favoritesHeaderButton} onPress={onGoToFavorites}>
+          <Text style={styles.favoritesHeaderIcon}>♡</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={products}
         renderItem={renderItem}
@@ -129,6 +137,33 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#f8fafc',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1e293b',
+  },
+  headerSpacer: {
+    width: 36,
+  },
+  favoritesHeaderButton: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  favoritesHeaderIcon: {
+    fontSize: 24,
+    color: '#4f46e5',
   },
   container: {
     flex: 1,
