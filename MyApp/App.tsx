@@ -5,25 +5,28 @@
  * @format
  */
 
-import { StatusBar, useColorScheme } from 'react-native';
+import { useState } from 'react';
+import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import HomeScreen from './src/screens/HomeScreen';
+import ProductDetailScreen from './src/screens/ProductDetailScreen';
+import { Product } from './src/types/Product';
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   return (
     <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <StatusBar barStyle="light-content" />
+      {selectedProduct ? (
+        <ProductDetailScreen
+          product={selectedProduct}
+          onBack={() => setSelectedProduct(null)}
+        />
+      ) : (
+        <HomeScreen onProductSelect={setSelectedProduct} />
+      )}
     </SafeAreaProvider>
-  );
-}
-
-function AppContent() {
-
-  return (
-    <HomeScreen />
   );
 }
 

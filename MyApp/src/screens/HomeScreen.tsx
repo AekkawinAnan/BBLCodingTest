@@ -7,23 +7,16 @@ import {
   Image,
   ActivityIndicator,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Product } from '../types/Product';
 
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  category: string;
-  image: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
+interface HomeScreenProps {
+  onProductSelect: (product: Product) => void;
 }
 
-function HomeScreen() {  
+function HomeScreen({ onProductSelect }: HomeScreenProps) {  
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -62,7 +55,10 @@ function HomeScreen() {
   }, [fetchProducts]);
 
   const renderItem = ({ item }: { item: Product }) => (
-    <View style={styles.productItem}>
+    <TouchableOpacity
+      style={styles.productItem}
+      activeOpacity={0.7}
+      onPress={() => onProductSelect(item)}>
       <Image
         source={{ uri: item.image }}
         style={styles.productImage}
@@ -74,7 +70,7 @@ function HomeScreen() {
         </Text>
         <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   const keyExtractor = (item: Product) => item.id.toString();
